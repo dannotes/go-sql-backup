@@ -15,7 +15,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version: '1.21' # Updated from 1.18 to 1.21
+          go-version: '1.21'
 
       - name: Install dependencies
         run: go mod download
@@ -27,7 +27,7 @@ jobs:
         run: |
           mkdir release
           copy db-backup-restore.exe release/
-          copy config.json release/
+          copy sample.config.json release/config.json
 
       - name: Zip release
         run: |
@@ -55,13 +55,14 @@ jobs:
             ### Changes in ${{ github.ref_name }}
             - Fixed directory creation error during restore by checking existence first
             - Added Go module support for dependency management
+            - Added sample.config.json, included as config.json in release
 
             ### Assets
             - `release-${{ github.ref_name }}.zip`: Contains `db-backup-restore.exe` and `config.json`
 
             ### Instructions
             1. Download and unzip `release-${{ github.ref_name }}.zip`
-            2. Edit `config.json` with your settings
+            2. Edit `config.json` with your settings (based on the provided sample)
             3. Run `db-backup-restore.exe --backup` or `db-backup-restore.exe --restore`
           draft: false
           prerelease: false
