@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write  # Grant write access to repository contents for creating releases
+
 jobs:
   build-and-release:
     runs-on: windows-latest
