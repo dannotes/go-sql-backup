@@ -1,0 +1,70 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.18'
+
+      - name: Build executable
+        run: go build -o db-backup-restore.exe main.go
+
+      - name: Create release directory
+        run: |
+          mkdir release
+          copy db-backup-restore.exe release/
+          copy config.json release/
+
+      - name: Zip release
+        run: |
+          powershell -Command "Compress-Archive -Path release/* -DestinationPath release.zip"
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          body: |
+            ## Release Notes - ${{ github.ref_name }}
+
+            ### Features
+            - Backup SQL Server databases to Azure Blob Storage, smallest first
+            - Restore databases from backups, smallest first
+            - Optional backup compression
+            - Configurable parallelism
+            - Dry run and debug modes
+            - Detailed colored output and summary table
+
+            ### Assets
+            - `release-${{ github.ref_name }}.zip`: Contains `db-backup-restore.exe` and `config.json`
+
+            ### Instructions
+            1. Download and unzip `release-${{ github.ref_name }}.zip`
+            2. Edit `config.json` with your settings
+            3. Run `db-backup-restore.exe --backup` or `db-backup-restore.exe --restore`
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: release.zip
+          asset_name: release-${{ github.ref_name }}.zip
+          asset_content_type: application/zip
