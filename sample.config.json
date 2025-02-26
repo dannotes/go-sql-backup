@@ -1,0 +1,13 @@
+{
+    "storageAccountName": "mystorageaccount",
+    "containerName": "database-backups",
+    "sqlConnectionString": "server=localhost\\SQLEXPRESS;Integrated Security=SSPI;TrustServerCertificate=true;port=1433;",
+    "sasToken": "si=backup-access&spr=https&sv=2022-11-02&sr=c&sig=abcdefghijklmnopqrstuvwxyz1234567890%2B%2F%3D",
+    "dataPath": "C:\\SQLData\\Restore",
+    "logPath": "C:\\SQLData\\Restore",
+    "parallelismThreshold": 2,
+    "excludedDatabases": "TestDB,DevDB,TempDB",
+    "copyOnly": false,
+    "compression": true,
+    "queryTimeoutInHours": 8
+  }
