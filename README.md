@@ -122,6 +122,15 @@ Run the tool with one of the following commands:
 - Console logs with timestamps and color-coded status (yellow for info, green for success, red for errors, orange for warnings).
 - A summary table at the end showing database names, folder paths, stripe counts, results, time taken, and error details (if any).
 
+### Backup
+![](docs/backup.png)
+
+### Restore
+![](docs/restore.png)
+
+
+---
+
 ## Notes
 
 - The tool creates an Azure credential in SQL Server using the provided SAS token.
